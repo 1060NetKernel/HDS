@@ -1,0 +1,33 @@
+==HDS==
+
+The Hierarchical Data Structure (HDS) is often used as the universal internal representation for
+passing rich data between in between endpoints. We have found that tree structured data is
+the ideal data model in a large number of usecases. It can be used for as a replacement
+for:
+* lists
+* maps
+* trees
+* forests (lists of trees)
+* any combination of the above
+
+It supports transreption to and from XML and JSON and uses XML as it's serialisation format.
+HDS allows any single Java object value at every node within the structure not just strings.
+HDS has simple support for passing through XML attributes and namespaces by allowing
+attributes starting with @ for attributes and node names with colons in for namespaces. These
+names have no semantic purpose in HDS. The only aspects of XML that cannot be natively supported
+are processing instructions, comments and mixed content nodes. We thing this makes for a much
+cleaner data model.
+
+==Legacy==
+HDS has been available in NetKernel since 4.0. It was included in the layer0 jar because many
+of the core services and libraries use it. This module contains a new version 2 HDS with a number
+additional capabilities:
+* Full XPath support for querying
+* Full XPath support for updating and combining documents
+* Builder pattern support for creating documents
+* Full support for XPath keys which can be baked into representations and provide constant time lookup into document
+* Optimised implementation without internal "parent reference" which reduces memory footprint when making changes
+* Clear representation vs endpoint internal interfaces
+
+
+ 

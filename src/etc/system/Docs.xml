@@ -1,0 +1,52 @@
+<docs>
+  <doc>
+    <id>doc:mod:hds:title</id>
+    <title>HDS</title>
+    <desc>Hierarchical Data Structure</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/title.txt</uri>
+    <keywords></keywords>
+  </doc>
+  <doc>
+    <id>doc:mod:hds:guide</id>
+    <title>User Guide</title>
+    <desc>How to use HDS</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/guide.txt</uri>
+    <keywords></keywords>
+  </doc>
+  <doc>
+    <id>doc:mod:hds:transreptors</id>
+    <title>Transreptors</title>
+    <desc>Transreptors for HDS</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/transreptor.txt</uri>
+    <keywords></keywords>
+  </doc>
+  <doc>
+    <id>doc:mod:hds:toHDS</id>
+    <title>toHDS</title>
+    <desc>Transreptors for HDS</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/toHDS.txt</uri>
+    <category>doc transreptor</category>
+  </doc>
+  <doc>
+    <id>doc:mod:hds:fromHDS</id>
+    <title>fromHDS</title>
+    <desc>Transreptors for HDS</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/fromHDS.txt</uri>
+    <category>doc transreptor</category>
+  </doc>
+  <doc>
+    <id>doc:mod:hds:representation</id>
+    <title>HDS2</title>
+    <desc>HDS2 Representation</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/representation.txt</uri>
+    <category>doc representation</category>
+  </doc>
+  <doc>
+    <id>doc:mod:hds:fragmentor</id>
+    <title>HDS Fragmentor</title>
+    <desc>create resources from fragments of a document</desc>
+    <uri>res:/org/netkernel/mod/hds/doc/fragmentor.txt</uri>
+    <category>doc accessor</category>
+  </doc>
+
+</docs>

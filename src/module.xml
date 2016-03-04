@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module version="2.0">
+	<meta>
+		<identity>
+			<uri>urn:org:netkernel:mod:hds</uri>
+			<version>1.1.1</version>
+		</identity>
+		<info>
+			<name>HDS</name>
+			<description>Hierarchical Data Structure Representation</description>
+			<icon>res:/org/netkernel/mod/hds/doc/hds.png</icon>
+		</info>
+	</meta>
+	<system>
+		<classloader>
+			<exports>
+				<match>org\.netkernel\.mod\.hds\..*</match>
+			</exports>
+		</classloader>
+	</system>
+	<rootspace>
+		<representation>
+			<class>org.netkernel.mod.hds.IHDSDocument</class>
+			<name>HDS2 Document</name>
+		</representation>
+		<accessor>
+			<id>hds:fragmentor</id>
+			<description>Make a resource from a fragment of a HDS document</description>
+			<grammar>
+				<active>
+					<identifier>active:fragmentHDS</identifier>
+					<argument name="operand" />
+					<argument name="xpath" />
+				</active>
+			</grammar>
+			<class>org.netkernel.mod.hds.accessor.HDSFragmentor</class>
+		</accessor>
+		<transreptor>
+			<id>hds:toHDS</id>
+			<class>org.netkernel.mod.hds.transrept.ToHDSTransreptor</class>
+		</transreptor>
+		<transreptor>
+			<id>hds:fromHDS</id>
+			<class>org.netkernel.mod.hds.transrept.FromHDSTransreptor</class>
+		</transreptor>
+		<fileset>
+			<regex>res:/etc/system/(Books|Docs)\.xml</regex>
+		</fileset>
+		<fileset>
+			<regex>res:/org/netkernel/mod/hds/doc/.*</regex>
+		</fileset>
+	</rootspace>
+	
+</module>

@@ -1,0 +1,138 @@
+=HDS2 Guide=
+This guide shows you how to use the HDS2 representation within endpoints. It walks
+through the API and covers common use cases.
+
+==Creating a new document==
+This example shows create a HDS document from scratch. Giving it a few nodes using
+the builder pattern and creating a representation from it as the response
+{java}
+import org.netkernel.mod.hds.*;
+IHDSMutator m = HDSFactory.newDocument();
+m.pushNode("a").addNode("b","first").addNode("b","second");
+IHDSDocument representation=m.toDocument(false); //don't clone
+context.createResponseFrom(representation);
+{/java}
+
+==Source existing resource==
+Source a resource transrepting to HDS if needed then creating a reader on the document
+and performing an XPath lookup. If exactly one node matching path doesn't exist then
+this method will throw an exception. See query section for more examples.
+{java}
+import org.netkernel.mod.hds.*;
+IHDSDocument representation=context.source("res:/myresource",IHDSDocument.class);
+IHDSReader r=representation.getReader();
+Object nodeValue=r.getFirstValue("/a/b/c");
+{/java}
+
+==Query==
+Many methods exist to query a HDS document, a simple xpath lookup of a value is shown
+above. This example shows how to iterate over zero or more matching nodes. The getNodes()
+method returns back a collection of offset (meaning relative XPaths will be resolved
+relative to a node other than the root) reader instances on the same document. 
+{java}
+import org.netkernel.mod.hds.*;
+IHDSDocument representation=context.source("res:/myresource",IHDSDocument.class);
+IHDSReader r=representation.getReader();
+for (IHDSReader r2: r.getNodes("/a/b"))
+{	Object value=r2.getFirstValue("c");
+	System.out.println(value);
+}
+{/java}
+
+XPath expressions can be evaluated that can evaluate to Strings, Boolean or Number.
+These return java.lang.String, java.lang.Boolean and java.lang.Double respectively.
+{java}
+import org.netkernel.mod.hds.*;
+IHDSDocument representation=context.source("res:/myresource",IHDSDocument.class);
+IHDSReader r=representation.getReader();
+int numberOfCNodes=((Double)r.getFirstValue("count(/a/b/c)")).intValue();
+{/java}
+
+==Builder pattern==
+The build API on IHDSMutator can be used to create new documents as shown above
+(in creating a new document section) or to add to existing documents. A mutator
+has an internal cursor node which is used as the location to apply changes. See
+java for setCursor() and getCursorXPath() for more details. When creating a mutator
+on an existing representation a copy is made and original representation will not
+be modified.
+{java}
+import org.netkernel.mod.hds.*;
+IHDSDocument representation=context.source("res:/myresource",IHDSDocument.class);
+IHDSMutator m=representation.getMutableClone();
+m.setCursor("/a");
+m.pushNode("b").addNode("c","third").popNode();
+m.pushNode("b").addNode("c","forth").popNode();
+IHDSDocument newRepresentation=m.toDocument(false);
+{/java}
+
+==Importing nodes from another document==
+It is possible to slice and dice documents by importing fragments from other document.
+All methods act at the cursor node, this makes it clean to mix building and importing.
+Four methods are available which all are slight variants on how the imported nodes
+are applied to the document. 
+
+{java}
+import org.netkernel.mod.hds.*;
+IHDSDocument representation=context.source("res:/myresource",IHDSDocument.class);
+IHDSReader r=representation.getReader();
+
+IHDSMutator m=HDSFactory.newDocument();
+m.pushNode("a");
+m.append(r); //append child
+m.appendChildren(r) // append every child of
+m.insertBefore(r); // insert before cursor (now on inserted node)
+m.insertAfter(r); // insert after cursor (now on last inserted node)
+m.replace(r); // replace the last inserted node
+{/java}
+
+==Modifying multiple nodes==
+To modify multiple nodes with one operation you can use the getNodes() method in
+the same way as on the IHDSReader to select nodes.
+ 
+{java}
+import org.netkernel.mod.hds.*;
+IHDSDocument representation=context.source("res:/myresource",IHDSDocument.class);
+IHDSMutator m=representation.getMutableClone();
+for (IHDSMutator m2 : m.getNodes("/a/b"))
+{	m2.delete();
+}
+{/java}
+
+==Fast indices into documents==
+Normally XPath uses linear searching when evaluating expressions which can result
+in slow execution for lookup in large documents. However XPath provides a key
+function which allows the use of pre-defined indexes into the document. An
+index can be used to create an association between key values and a *set* of nodes
+within the document. HDS provides a methods to define these indexes that can then
+be used with XPath expressions. Indexes can be sealed into a HDS Document representation
+so the one time cost of building an index can be amortised over multiple retrievals
+of the document from cache.
+
+An index is defined in an analogous way to the XSLT [http://www.w3schools.com/xsl/el_key.asp|xsl:key function].
+{java}
+IHDSReader r;
+//an XPath expression to define a set of nodes to be indexed
+String match="/a/b";
+//a relative XPath expression to evaluate to key for each node
+String use="c";
+r.defineKey("index1", match, use);
+
+//use key function to lookup a node
+IHDSReader r2=r.getFirstNode("key('index1','third')");
+{/java}
+
+==Storing index in a representation==
+If a key is created on an IHDSMutator rather than an IHDSReader and that mutator
+is converted to a representation using the toDocument() method then any keys
+defined in it will be stored in the representation. 
+
+{java}
+IHDSMutator m=HDSBuilder.newDocument();
+m.pushNode("a");
+m.pushNode("b").addNode("@id","1").addNode("v","first").popNode();
+m.pushNode("b").addNode("@id","2").addNode("v","second").popNode();
+m.pushNode("b").addNode("@id","3").addNode("v","third").popNode();
+m.defineKey("byId", "/a/b/v", "../@id");
+IHDSDocument d=m.toDocument(false);
+context.createResponseFrom(d);
+{/java}

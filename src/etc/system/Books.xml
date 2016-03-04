@@ -1,0 +1,23 @@
+<books>
+	<book>
+		<id>book:mod:hds</id>
+		<title>HDS</title>
+		<desc>Hierarchical Data Structure Reference</desc>
+		<author/>
+		<publisher/>
+		<date/>
+		<modified/>
+		<icon>res:/org/netkernel/mod/hds/doc/hds.png</icon>
+		<keywords/>
+		<toc>
+			<item id="doc:mod:hds:title"/>
+			<item id="doc:mod:hds:guide"/>
+			<item id="doc:mod:hds:representation" title="Representation"/>
+			<item id="doc:mod:hds:transreptors">
+				<item id="doc:mod:hds:toHDS"/>
+				<item id="doc:mod:hds:fromHDS"/>
+			</item>
+			<item id="doc:mod:hds:fragmentor"/>
+		</toc>
+	</book>
+</books>

@@ -1,0 +1,1 @@
+{endpoint}org.netkernel.mod.hds.IHDSDocument{/endpoint}
